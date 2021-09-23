@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useEffect } from 'react'
 import { Button, Stack } from '@mui/material'
 import RoomMembers from './RoomMembers'
 import { db, useAuth } from '../firabase'
@@ -19,7 +19,7 @@ function haveCollisions(matrix, x, y, mapSize) {
   return !!(y < mapSize - 1 && x > 0 && matrix[y + 1][x - 1])
 }
 
-export default function Editor({ room }) {
+export default function Editor({ room, onAllUsersReady }) {
   const mapSize = 10
 
   const { user } = useAuth()
@@ -93,6 +93,16 @@ export default function Editor({ room }) {
 
     db.update(dbPath, { ships })
   }, [me])
+
+  useEffect(() => {
+    if (!room || !room.users) return
+
+    for (const user of Object.values(room.users)) {
+      if (!user.ready) return
+    }
+
+    onAllUsersReady()
+  }, [room, onAllUsersReady])
 
   return <div>
     <RoomMembers room={ room } />
