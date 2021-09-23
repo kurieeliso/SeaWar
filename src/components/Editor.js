@@ -39,19 +39,16 @@ export default function Editor({ room, onAllUsersReady }) {
     })
 
     matrix[y][x] = matrix[y][x] ? 0 : 1
-
     const ships = []
 
     for (let x = 0; x < mapSize; x++) {
       for (let y = 0; y < mapSize; y++) {
         if (matrix[y][x] && haveCollisions(matrix, x, y, mapSize)) {
-          console.warn('Collision!')
+          console.warn('Collision!', x, y)
           return
         }
       }
     }
-
-    console.log(matrix.map(v => [...v]))
 
     for (let x = 0; x < mapSize; x++) {
       for (let y = 0; y < mapSize; y++) {
@@ -108,6 +105,7 @@ export default function Editor({ room, onAllUsersReady }) {
     <RoomMembers room={ room } />
 
     <Sea
+      showShips
       ships={ me.ships || [] }
       misses={[]}
       onFire={ editShips }
