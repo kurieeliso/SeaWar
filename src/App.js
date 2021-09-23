@@ -34,6 +34,11 @@ export default function App() {
     }
   }, [])
 
+  useEffect(() => {
+    const r = rooms.find(({ id }) => roomId)
+    if (!r) setRoute('home')
+  }, [rooms])
+
   const renderRoute = useCallback((route) => {
     switch (route) {
       case 'home':
