@@ -8,7 +8,7 @@ import {
   ListItemAvatar,
   Avatar, ListItemText, Divider, Card, ListItemButton,
 } from '@mui/material'
-import { db, useAuth } from '../firabase'
+import { db, useAuth, userToAuthor } from '../firabase'
 
 export default function Home({ rooms, onRoomChanged }) {
   const [roomName, setRoomName] = useState('')
@@ -16,6 +16,8 @@ export default function Home({ rooms, onRoomChanged }) {
 
   useEffect(() => {
     for (const room of rooms) {
+      if (!room.users) continue
+
       if (room.users[user.uid]) {
         onRoomChanged(room)
       }
@@ -76,7 +78,9 @@ export default function Home({ rooms, onRoomChanged }) {
         { rooms.map((room, index) => <Fragment key={ room.id }>
           <ListItemButton
             alignItems="flex-start"
-            onClick={ () => onRoomChanged(room) }
+            onClick={ () => {
+              db.update(`/rooms/${ room.id }/users/${ user.uid }`, userToAuthor(user))
+            } }
           >
             <ListItemAvatar>
               <Avatar alt={ room.author.name } src={ room.author.photo }/>
