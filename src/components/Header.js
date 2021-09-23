@@ -1,7 +1,10 @@
 import { AppBar, Toolbar, IconButton, Typography, Button } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
+import { useAuth } from '../firabase'
 
-export default function Header({ account }) {
+export default function Header() {
+  const { user, login } = useAuth()
+
   return <AppBar position="static">
     <Toolbar>
       <IconButton
@@ -9,14 +12,19 @@ export default function Header({ account }) {
         edge="start"
         color="inherit"
         aria-label="menu"
-        sx={{ mr: 2 }}
+        sx={ { mr: 2 } }
       >
-        <MenuIcon />
+        <MenuIcon/>
       </IconButton>
-      <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+      <Typography variant="h6" component="div" sx={ { flexGrow: 1 } }>
         Sea War
       </Typography>
-      <Button color="inherit">Login</Button>
+      { !user ? <Button
+        color="inherit"
+        onClick={ login }
+      >Login</Button> : <Button
+        color="inherit"
+      >{ user.displayName }</Button> }
     </Toolbar>
   </AppBar>
 }

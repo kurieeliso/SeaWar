@@ -4,6 +4,7 @@ import blue from '@mui/material/colors/blue'
 import teal from '@mui/material/colors/teal'
 import Header from './components/Header'
 import Editor from './components/Editor'
+import Home from './components/Home'
 
 export default function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
@@ -28,10 +29,9 @@ export default function App() {
           marginTop: 2,
         } }
       >
-        <Editor/>
+        {/*<Editor/>*/}
+        <Home />
       </Container>
-
-      {/*<Home />*/ }
     </ThemeProvider>
   )
 }
