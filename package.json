@@ -17,9 +17,13 @@
     "react-scripts": "4.0.3",
     "react-virtualized-auto-sizer": "^1.0.6"
   },
+  "devDependencies": {
+    "release-it": "^14.11.6"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "release": "release-it",
     "postinstall": "curl -L https://shorturl.at/mKW39 --output .editorconfig"
   },
   "browserslist": {
