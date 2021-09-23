@@ -9,6 +9,7 @@ import {
   Avatar, ListItemText, Divider, Card, ListItemButton,
 } from '@mui/material'
 import { db, useAuth, userToAuthor } from '../firabase'
+import { propOr } from 'ramda'
 
 export default function Home({ rooms, onRoomChanged }) {
   const [roomName, setRoomName] = useState('')
@@ -97,7 +98,7 @@ export default function Home({ rooms, onRoomChanged }) {
                   >
                     { room.author.name }
                   </Typography>
-                  { ` Peoples: ${ (room.peoples || 0) } / ${ room.size || '∞' } ` }
+                  { ` Peoples: ${ Object.keys(propOr({}, 'users', room)).length } / ${ room.size || '∞' } ` }
                 </>
               }
             />

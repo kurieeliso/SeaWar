@@ -54,7 +54,7 @@ export default function App() {
       case 'battle':
         return <Battle room={ rooms.find(({ id }) => roomId) } />
     }
-  }, [roomId, rooms])
+  }, [roomId, rooms, route])
 
   return (
     <ThemeProvider theme={ theme }>
