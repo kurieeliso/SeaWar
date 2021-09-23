@@ -88,8 +88,12 @@ function SeaCanvas({ width, height, size, ships, misses, onFire }) {
   }, [cs])
 
   const handleClick = useCallback((e) => {
-    const x = Math.floor((e.evt.layerX - e.target.attrs.x) / cs)
-    const y = Math.floor((e.evt.layerY - e.target.attrs.y) / cs)
+    const target = e.evt.touches && e.evt.touches.length ? e.evt.touches[0] : e.evt
+    const bounds = target.target.getBoundingClientRect()
+    console.log(target, )
+
+    const x = Math.floor((target.clientX - bounds.x) / cs) - 1
+    const y = Math.floor((target.clientY - bounds.y) / cs) - 1
     onFire(x, y)
   }, [cs, onFire])
 
