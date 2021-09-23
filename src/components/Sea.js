@@ -16,7 +16,7 @@ function Helpers({ direction, count, cs, coordFn, theme }) {
     return <Group key={ index } listening={ false }>
       { index < count && <>
         <Text
-          fontSize={ convertRemToPixels(theme.typography.h6.fontSize) }
+          fontSize={ cs * 0.6 }
           fontFamily={ theme.typography.h6.fontFamily }
           x={ coordFn(direction === 'row' ? index : -1) }
           y={ coordFn(direction === 'col' ? index : -1) }
@@ -29,7 +29,7 @@ function Helpers({ direction, count, cs, coordFn, theme }) {
         />
 
         <Text
-          fontSize={ convertRemToPixels(theme.typography.h6.fontSize) }
+          fontSize={ cs * 0.6 }
           fontFamily={ theme.typography.h6.fontFamily }
           x={ coordFn(direction === 'row' ? index : count) }
           y={ coordFn(direction === 'col' ? index : count) }
@@ -90,7 +90,6 @@ function SeaCanvas({ width, height, size, ships, misses, onFire }) {
   const handleClick = useCallback((e) => {
     const target = e.evt.touches && e.evt.touches.length ? e.evt.touches[0] : e.evt
     const bounds = target.target.getBoundingClientRect()
-    console.log(target, )
 
     const x = Math.floor((target.clientX - bounds.x) / cs) - 1
     const y = Math.floor((target.clientY - bounds.y) / cs) - 1
@@ -149,76 +148,48 @@ function SeaCanvas({ width, height, size, ships, misses, onFire }) {
   </Stage>
 }
 
-export default function Sea({ size = 10 }) {
-  const [ships, setShips] = useState([
-    {
-      killed: false,
-      coords: [{
-        x: 0, y: 0,
-        padded: true,
-      }, {
-        x: 0, y: 1,
-      }, {
-        x: 0, y: 2,
-        padded: true,
-      }, {
-        x: 0, y: 3,
-      }]
-    },
-    {
-      killed: false,
-      coords: [{
-        x: 7, y: 6,
-      }, {
-        x: 8, y: 6,
-      }, {
-        x: 9, y: 6,
-      }]
-    },
-    {
-      killed: true,
-      coords: [{
-        x: 5, y: 0,
-        padded: true,
-      }, {
-        x: 5, y: 1,
-        padded: true,
-      }]
-    },
-  ])
-  const [misses, setMisses] = useState([[4, 7]])
+export default function Sea({ ships, misses, size = 10, onFire }) {
 
-  const checkFire = useCallback((x, y) => {
-    let shipFound = false
-    setShips(ships.map((ship) => {
-      let paddedCount = 0
-      const coords = ship.coords.map((coords) => {
-        const found = coords.x === x && coords.y === y
-        if (found) shipFound = true
 
-        const updatedCoords = {
-          x: coords.x,
-          y: coords.y,
-          padded: coords.padded || found
-        }
+  // const checkFire = useCallback((x, y) => {
+  //   let shipFound = false
+  //   setShips(ships.map((ship) => {
+  //     let paddedCount = 0
+  //     const coords = ship.coords.map((coords) => {
+  //       const found = coords.x === x && coords.y === y
+  //       if (found) shipFound = true
+  //
+  //       const updatedCoords = {
+  //         x: coords.x,
+  //         y: coords.y,
+  //         padded: coords.padded || found
+  //       }
+  //
+  //       if (updatedCoords.padded) paddedCount++
+  //       return updatedCoords
+  //     })
+  //
+  //     return {
+  //       ...ship,
+  //       coords,
+  //       killed: paddedCount === coords.length,
+  //     }
+  //   }))
+  //
+  //   if (!shipFound) {
+  //     setMisses([...misses, [x, y]])
+  //   }
+  // }, [ships, misses])
 
-        if (updatedCoords.padded) paddedCount++
-        return updatedCoords
-      })
-
-      return {
-        ...ship,
-        coords,
-        killed: paddedCount === coords.length,
-      }
-    }))
-
-    if (!shipFound) {
-      setMisses([...misses, [x, y]])
-    }
-  }, [ships, misses])
-
-  return <Card sx={ { aspectRatio: '1 / 1' } }>
+  return <Card
+    sx={ {
+      aspectRatio: '1 / 1',
+      maxWidth: '80%',
+      marginBottom: 2,
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    } }
+  >
     <AutoSizer>
       { ({ width, height }) => <SeaCanvas
         width={ width }
@@ -226,7 +197,7 @@ export default function Sea({ size = 10 }) {
         size={ size }
         ships={ ships }
         misses={ misses }
-        onFire={ checkFire }
+        onFire={ onFire }
       /> }
     </AutoSizer>
   </Card>
