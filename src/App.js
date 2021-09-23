@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import { useMemo } from 'react'
+import { useMediaQuery, createTheme, ThemeProvider, CssBaseline, Container } from '@mui/material'
+import blue from '@mui/material/colors/blue'
+import teal from '@mui/material/colors/teal'
+import Header from './components/Header'
+import Editor from './components/Editor'
 
-function App() {
+export default function App() {
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
+
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          primary: blue,
+          secondary: teal,
+          mode: prefersDarkMode ? 'dark' : 'light',
+        },
+      }),
+    [prefersDarkMode],
+  )
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <ThemeProvider theme={ theme }>
+      <CssBaseline/>
+      <Header />
 
-export default App;
+      <Container
+        maxWidth="sm"
+        sx={{
+          marginTop: 2
+        }}
+      >
+        <Editor />
+      </Container>
+
+      {/*<Home />*/}
+    </ThemeProvider>
+  )
+}
