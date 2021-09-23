@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from 'react'
+import { useCallback } from 'react'
 import RoomMembers from './RoomMembers'
 import Sea from './Sea'
 import { useAuth, db } from '../firabase'
@@ -8,8 +8,6 @@ export default function Battle({ room }) {
   const { user } = useAuth()
 
   const handleFire = useCallback((uid) => (x, y) => {
-    console.log(uid, x, y, room)
-
     const shoots = pathOr([], ['shoots', uid], room)
     const misses = pathOr([], ['misses', uid], room)
     const ships = pathOr([], ['users', uid, 'ships'], room)
@@ -42,7 +40,11 @@ export default function Battle({ room }) {
     })
 
     if (!shipFound) {
+      const uids = Object.keys(room.users)
+      let nextUser = uids.indexOf(user.uid) + 1
+      if (nextUser === uids.length) nextUser = 0
       db.set(`/rooms/${ room.id }/misses/${ uid }`, misses)
+      db.set(`/rooms/${ room.id }/currentUser`, uids[nextUser])
     } else {
       db.update(`/rooms/${ room.id }/users/${ uid }`, { ships: updatedShips })
     }
