@@ -46,19 +46,29 @@ export const db = {
   createRoom: (name) => {
     const user = auth.currentUser
     const id = uuid()
+    const author = {
+      uid: user.uid,
+      name: user.displayName,
+      photo: user.photoURL,
+    }
 
     set(ref(database, `/rooms/${ id }`), {
-      id, name,
+      id, name, locked: false,
       created_at: new Date().toISOString(),
-      author: {
-        uid: user.uid,
-        name: user.displayName,
-        photo: user.photoURL,
+      author,
+      users: {
+        [user.uid]: {
+          ...author,
+          ready: false,
+          ships: [],
+        }
       },
+      currentUser: author.uid,
+      shoots: []
     }).catch(() => {})
   },
-  updateRoom: (id, data) => {
-
+  update: (path, data) => {
+    update(ref(database, path), data).catch(() => {})
   },
 }
 
