@@ -6,6 +6,7 @@ import Header from './components/Header'
 import Home from './components/Home'
 import Editor from './components/Editor'
 import { db } from './firabase'
+import Battle from './components/Battle'
 
 export default function App() {
   const [rooms, setRooms] = useState([])
@@ -41,7 +42,12 @@ export default function App() {
           setRoute('editor')
         } }/>
       case 'editor':
-        return <Editor room={ rooms.find(({ id }) => roomId) } />
+        return <Editor
+          room={ rooms.find(({ id }) => roomId) }
+          onAllUsersReady={ () => setRoute('battle') }
+        />
+      case 'battle':
+        return <Battle room={ rooms.find(({ id }) => roomId) } />
     }
   }, [roomId, rooms])
 

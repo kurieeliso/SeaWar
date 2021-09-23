@@ -5,12 +5,6 @@ import AutoSizer from 'react-virtualized-auto-sizer'
 import { useMemo, useCallback, useState } from 'react'
 import { times } from 'ramda'
 
-function convertRemToPixels(rem) {
-  rem = rem.substr(0, rem.length - 3) * 1
-
-  return rem * parseFloat(getComputedStyle(document.documentElement).fontSize)
-}
-
 function Helpers({ direction, count, cs, coordFn, theme }) {
   return times((index) => {
     return <Group key={ index } listening={ false }>
@@ -76,7 +70,7 @@ function Miss({ x, y, s, color }) {
   />
 }
 
-function SeaCanvas({ width, height, size, ships, misses, onFire }) {
+function SeaCanvas({ width, height, size, ships, misses, showShips, onFire }) {
   const theme = useTheme()
 
   const cs = useMemo(() => {
@@ -123,11 +117,11 @@ function SeaCanvas({ width, height, size, ships, misses, onFire }) {
           color={ killed ?
             theme.palette.error[theme.palette.mode] :
             padded ? theme.palette.warning[theme.palette.mode] :
-            theme.palette.primary[theme.palette.mode] }
+            showShips ? theme.palette.primary[theme.palette.mode] : 'transparent' }
         />) }
       </Group>) }
 
-      { misses.map(([x, y], i) => <Miss
+      { misses.map(({ x, y }, i) => <Miss
         key={ i }
         x={ coord(x) }
         y={ coord(y) }
@@ -148,39 +142,7 @@ function SeaCanvas({ width, height, size, ships, misses, onFire }) {
   </Stage>
 }
 
-export default function Sea({ ships, misses, size = 10, onFire }) {
-
-
-  // const checkFire = useCallback((x, y) => {
-  //   let shipFound = false
-  //   setShips(ships.map((ship) => {
-  //     let paddedCount = 0
-  //     const coords = ship.coords.map((coords) => {
-  //       const found = coords.x === x && coords.y === y
-  //       if (found) shipFound = true
-  //
-  //       const updatedCoords = {
-  //         x: coords.x,
-  //         y: coords.y,
-  //         padded: coords.padded || found
-  //       }
-  //
-  //       if (updatedCoords.padded) paddedCount++
-  //       return updatedCoords
-  //     })
-  //
-  //     return {
-  //       ...ship,
-  //       coords,
-  //       killed: paddedCount === coords.length,
-  //     }
-  //   }))
-  //
-  //   if (!shipFound) {
-  //     setMisses([...misses, [x, y]])
-  //   }
-  // }, [ships, misses])
-
+export default function Sea({ ships, misses, size = 10, onFire, showShips }) {
   return <Card
     sx={ {
       aspectRatio: '1 / 1',
@@ -198,6 +160,7 @@ export default function Sea({ ships, misses, size = 10, onFire }) {
         ships={ ships }
         misses={ misses }
         onFire={ onFire }
+        showShips={ showShips }
       /> }
     </AutoSizer>
   </Card>

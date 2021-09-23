@@ -67,12 +67,14 @@ export const db = {
         }
       },
       currentUser: author.uid,
-      shoots: []
     }).catch(() => {})
   },
   update: (path, data) => {
     update(ref(database, path), data).catch(() => {})
   },
+  set: (path, data) => {
+    set(ref(database, path), data).catch(() => {})
+  }
 }
 
 export function useAuth() {
@@ -93,7 +95,6 @@ export function useAuth() {
         const token = credential.accessToken
         // The signed-in user info.
         const user = result.user
-        console.log(token, user)
       }).catch(() => {})
   }, [user])
 

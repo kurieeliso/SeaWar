@@ -1,14 +1,23 @@
-import { Chip, Avatar, Box } from '@mui/material'
+import { Chip, Avatar, Stack } from '@mui/material'
+import { useAuth } from '../firabase'
 
-export default function RoomMembers({ room }) {
+export default function RoomMembers({ room, currentUser }) {
   if (!room || !room.users) return false
+  const { user } = useAuth()
 
-  return <Box sx={ { marginBottom: 2 } }>
+  return <Stack
+    direction={ 'row' }
+    sx={ { marginBottom: 2 } }
+    spacing={ 1 }
+    overflow={ 'auto' }
+  >
     { Object.values(room.users).map((user) => <Chip
       key={ user.uid }
-      avatar={<Avatar alt={ user.name } src={ user.photo } />}
+      avatar={ <Avatar alt={ user.name } src={ user.photo }/> }
       label={ user.name }
-      color={ user.ready ? 'success' : undefined }
+      color={ currentUser ? (
+        currentUser === user.uid ? 'success' : undefined
+      ) : user.ready ? 'success' : undefined }
     />) }
-  </Box>
+  </Stack>
 }
