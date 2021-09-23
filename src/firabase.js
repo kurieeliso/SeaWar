@@ -38,6 +38,14 @@ onAuthStateChanged(auth, (user) => {
 const database = getDatabase(app)
 const roomsRef = ref(database, '/rooms/')
 
+export function userToAuthor(user) {
+  return {
+    uid: user.uid,
+    name: user.displayName,
+    photo: user.photoURL,
+  }
+}
+
 export const db = {
   ref: (path) => ref(database, path),
   on: (path, cb) => onValue(ref(database, path), (snapshot) => {
@@ -46,11 +54,7 @@ export const db = {
   createRoom: (name) => {
     const user = auth.currentUser
     const id = uuid()
-    const author = {
-      uid: user.uid,
-      name: user.displayName,
-      photo: user.photoURL,
-    }
+    const author = userToAuthor(user)
 
     set(ref(database, `/rooms/${ id }`), {
       id, name, locked: false,
@@ -60,7 +64,6 @@ export const db = {
         [user.uid]: {
           ...author,
           ready: false,
-          ships: [],
         }
       },
       currentUser: author.uid,
