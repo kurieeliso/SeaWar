@@ -8,33 +8,30 @@ import Editor from './components/Editor'
 export default function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          primary: blue,
-          secondary: teal,
-          mode: prefersDarkMode ? 'dark' : 'light',
-        },
-      }),
-    [prefersDarkMode],
-  )
+  const theme = useMemo(() =>
+    createTheme({
+      palette: {
+        primary: blue,
+        secondary: teal,
+        mode: prefersDarkMode ? 'dark' : 'light',
+      },
+    }), [prefersDarkMode])
 
   return (
     <ThemeProvider theme={ theme }>
       <CssBaseline/>
-      <Header />
+      <Header/>
 
       <Container
         maxWidth="sm"
-        sx={{
-          marginTop: 2
-        }}
+        sx={ {
+          marginTop: 2,
+        } }
       >
-        <Editor />
+        <Editor/>
       </Container>
 
-      {/*<Home />*/}
+      {/*<Home />*/ }
     </ThemeProvider>
   )
 }
