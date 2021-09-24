@@ -56,7 +56,7 @@ export const db = {
     const id = uuid()
     const author = userToAuthor(user)
 
-    set(ref(database, `/rooms/${ id }`), {
+    const room = {
       id, name, locked: false,
       created_at: new Date().toISOString(),
       author,
@@ -67,7 +67,10 @@ export const db = {
         }
       },
       currentUser: author.uid,
-    }).catch(() => {})
+    }
+
+    set(ref(database, `/rooms/${ id }`), room).catch(() => {})
+    return room
   },
   update: (path, data) => {
     update(ref(database, path), data).catch(() => {})

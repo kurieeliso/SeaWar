@@ -109,6 +109,7 @@ export default function Editor({ room, onAllUsersReady }) {
       ships={ me.ships || [] }
       misses={[]}
       onFire={ editShips }
+      active={ true }
     />
 
     <Stack direction={'row'} justifyContent={'center'} spacing={2}>

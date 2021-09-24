@@ -1,4 +1,4 @@
-import { useState, Fragment, useEffect } from 'react'
+import { useState, Fragment } from 'react'
 import {
   Typography,
   TextField,
@@ -15,20 +15,6 @@ export default function Home({ rooms, onRoomChanged }) {
   const [roomName, setRoomName] = useState('')
   const { user } = useAuth()
 
-  useEffect(() => {
-    for (const room of rooms) {
-      if (!room.users) continue
-
-      if (room.users[user.uid]) {
-        onRoomChanged(room)
-      }
-    }
-  }, [rooms, user])
-
-  if (!user) {
-    return 'PNX!'
-  }
-
   return <>
     <Stack
       sx={ {
@@ -40,7 +26,6 @@ export default function Home({ rooms, onRoomChanged }) {
       <Typography variant={ 'h3' }>Welcome to</Typography>
       <Typography variant={ 'h3' }>Sea War!</Typography>
     </Stack>
-
 
     <Stack direction="row" spacing={ 2 } justifyContent={ 'center' }>
       <TextField
@@ -55,7 +40,8 @@ export default function Home({ rooms, onRoomChanged }) {
         size={ 'large' }
         onClick={ () => {
           if (roomName) {
-            db.createRoom(roomName)
+            const room = db.createRoom(roomName)
+            onRoomChanged(room)
             setRoomName('')
           }
         } }
@@ -80,6 +66,7 @@ export default function Home({ rooms, onRoomChanged }) {
           <ListItemButton
             alignItems="flex-start"
             onClick={ () => {
+              onRoomChanged(room)
               db.update(`/rooms/${ room.id }/users/${ user.uid }`, userToAuthor(user))
             } }
           >

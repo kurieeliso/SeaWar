@@ -1,14 +1,16 @@
 import { useMemo, useState, useCallback, useEffect } from 'react'
-import { useMediaQuery, createTheme, ThemeProvider, CssBaseline, Container } from '@mui/material'
-import blue from '@mui/material/colors/blue'
-import teal from '@mui/material/colors/teal'
+import { useMediaQuery, createTheme, ThemeProvider, CssBaseline } from '@mui/material'
+import { blue, teal, red } from '@mui/material/colors'
 import Header from './components/Header'
 import Home from './components/Home'
 import Editor from './components/Editor'
-import { db } from './firabase'
+import { db, useAuth } from './firabase'
 import Battle from './components/Battle'
+import Auth from './components/Auth'
 
 export default function App() {
+  const { user } = useAuth()
+
   const [rooms, setRooms] = useState([])
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
   // const [route, setRoute] = useState('home')
@@ -17,8 +19,15 @@ export default function App() {
 
   const theme = useMemo(() => createTheme({
     palette: {
-      primary: blue,
-      secondary: teal,
+      primary: {
+        main: blue.A400,
+      },
+      secondary: {
+        main: teal.A400,
+      },
+      error: {
+        main: red.A400,
+      },
       mode: prefersDarkMode ? 'dark' : 'light',
     },
   }), [prefersDarkMode])
@@ -40,6 +49,8 @@ export default function App() {
   }, [rooms])
 
   const renderRoute = useCallback((route) => {
+    if (!user) return <Auth />
+
     switch (route) {
       case 'home':
         return <Home rooms={ rooms } onRoomChanged={ (room) => {
@@ -54,21 +65,21 @@ export default function App() {
       case 'battle':
         return <Battle room={ rooms.find(({ id }) => roomId) } />
     }
-  }, [roomId, rooms, route])
+  }, [roomId, rooms, route, user])
 
   return (
     <ThemeProvider theme={ theme }>
       <CssBaseline/>
-      <Header/>
-
-      <Container
-        maxWidth="sm"
-        sx={ {
-          marginTop: 2,
+      <Header
+        inRoom={ !!roomId }
+        onProfileClick={ () => {} }
+        onLeaveRoomClick={ () => {
+          setRoute('home')
+          setRoomId(undefined)
+          // TODO mark user in room as idle
         } }
-      >
-        { renderRoute(route) }
-      </Container>
+      />
+      { renderRoute(route) }
     </ThemeProvider>
   )
 }

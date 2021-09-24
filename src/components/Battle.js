@@ -64,6 +64,7 @@ export default function Battle({ room }) {
         misses={ pathOr([], ['misses', uid], room) }
         onFire={ handleFire(u.uid) }
         showShips={ false }
+        active={ room.currentUser === user.uid }
       />
     }) }
   </div>
