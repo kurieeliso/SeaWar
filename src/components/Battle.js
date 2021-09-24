@@ -65,6 +65,7 @@ export default function Battle({ room }) {
         onFire={ handleFire(u.uid) }
         showShips={ false }
         active={ room.currentUser === user.uid }
+        size={ 15 }
       />
     }) }
   </div>

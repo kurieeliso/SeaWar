@@ -1,14 +1,14 @@
 import { useCallback, useMemo, useEffect } from 'react'
-import { Button, Stack } from '@mui/material'
+import {Button, Container, Stack} from '@mui/material'
 import RoomMembers from './RoomMembers'
 import { db, useAuth } from '../firabase'
 import Sea from './Sea'
 
 const allowed = {
-  '4': 1,
-  '3': 2,
-  '2': 3,
-  '1': 4,
+  '4': 2,
+  '3': 4,
+  '2': 6,
+  '1': 8,
 }
 
 function haveCollisions(matrix, x, y, mapSize) {
@@ -20,7 +20,7 @@ function haveCollisions(matrix, x, y, mapSize) {
 }
 
 export default function Editor({ room, onAllUsersReady }) {
-  const mapSize = 10
+  const mapSize = 15
 
   const { user } = useAuth()
   const dbPath = useMemo(() => `/rooms/${ room.id }/users/${ user.uid }`, [room, user])
@@ -101,7 +101,7 @@ export default function Editor({ room, onAllUsersReady }) {
     onAllUsersReady()
   }, [room, onAllUsersReady])
 
-  return <div>
+  return <Container component="main" maxWidth="sm">
     <RoomMembers room={ room } />
 
     <Sea
@@ -110,6 +110,7 @@ export default function Editor({ room, onAllUsersReady }) {
       misses={[]}
       onFire={ editShips }
       active={ true }
+      size={ 15 }
     />
 
     <Stack direction={'row'} justifyContent={'center'} spacing={2}>
@@ -133,5 +134,5 @@ export default function Editor({ room, onAllUsersReady }) {
         onClick={ () => db.update(dbPath, { ready: true }) }
       >Ready</Button> }
     </Stack>
-  </div>
+  </Container>
 }
