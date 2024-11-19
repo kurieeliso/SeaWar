@@ -8,7 +8,7 @@
     "@mui/icons-material": "^5.0.1",
     "@mui/material": "^5.0.1",
     "event-emitter": "^0.3.5",
-    "firebase": "^9.0.2",
+    "firebase": "^10.9.0",
     "konva": "^8.1.4",
     "ramda": "^0.27.1",
     "react": "^17.0.2",
